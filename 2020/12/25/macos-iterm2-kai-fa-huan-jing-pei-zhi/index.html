@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="瑞哥的个人博客">
+  <meta name="author" content="Riger Wu">
+  <meta name="keywords" content="Java,Kotlin,Android,Tool,Vim">
+  <title>macOS iTerm2 开发环境配置 - Riger</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/gruvbox-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"rigerwu.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":"G-6VSHZ2S8ZE","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"8wYDzulBHiphLtKFUB4zUzYN-gzGzoHsz","app_key":"Mm0QSy1Fp103x6Bp7JDnuYGA","server_url":"https://8wydzulb.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Riger's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/universe.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="macOS iTerm2 开发环境配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-25 21:09" pubdate>
+        2020年12月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      967 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">macOS iTerm2 开发环境配置</h1>
+            
+            <div class="markdown-body">
+              <h1 id="macOS-iTerm2-开发环境配置"><a href="#macOS-iTerm2-开发环境配置" class="headerlink" title="macOS iTerm2 开发环境配置"></a>macOS iTerm2 开发环境配置</h1><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214140102118.png" srcset="/img/loading.gif" alt="image-20201214140102118"></p>
+<blockquote>
+<p>注意：本文很多应用的安装都是走的Github，建议在科学上网环境中进行。</p>
+</blockquote>
+<h2 id="1-iTerm2-安装"><a href="#1-iTerm2-安装" class="headerlink" title="1. iTerm2 安装"></a>1. iTerm2 安装</h2><p>放弃使用系统自带Terminl， 在 <a target="_blank" rel="noopener" href="https://iterm2.com/">iTerm2官网</a> 下载安装</p>
+<div align="center"><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214135558722.png" srcset="/img/loading.gif" alt="image-20201214135558722" style="zoom:50%;" /></div>
+
+<p>安装后打开，按上图，点击<code>Make iTerm2 Default Term</code>设置为默认终端</p>
+<h2 id="2-安装Homebrew"><a href="#2-安装Homebrew" class="headerlink" title="2. 安装Homebrew"></a>2. 安装Homebrew</h2><p><a target="_blank" rel="noopener" href="https://brew.sh/index_zh-cn"><code>Homebrew</code></a>自称是<code>MacOS</code>或<code>Linux</code>缺失的软件包管理器，使用它可以一行命令安装各种开发类工具及应用程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)&quot;<br></code></pre></div></td></tr></table></figure>
+<h2 id="3-安装zsh"><a href="#3-安装zsh" class="headerlink" title="3. 安装zsh"></a>3. 安装zsh</h2><p><code>MacOS</code>自带<code>zsh</code>，不过版本比较老，我们使用<code>homebrew</code>安装最新版，并修改默认<code>shell</code>为自己下载的<code>zsh</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew install zsh<br>echo &quot;/usr/local/bin/zsh&quot; | sudo tee -a /etc/shells<br>chsh -s /usr/local/bin/zsh<br></code></pre></div></td></tr></table></figure>
+<h2 id="4-安装ohmyzsh"><a href="#4-安装ohmyzsh" class="headerlink" title="4. 安装ohmyzsh"></a>4. 安装ohmyzsh</h2><p>运行下面的命名即可安装。 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh">ohmyzsh官网</a>也可以去看看各种插件和主题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;<br></code></pre></div></td></tr></table></figure>
+<p><code>zsh</code>的配置文件在：<code>~/.zshrc</code>,后面的配置都在这里面，这里假设你会使用<code>vim</code>，不会可自行使用<code>Sublime</code>等编辑器。</p>
+<h2 id="5-字体主题配置"><a href="#5-字体主题配置" class="headerlink" title="5. 字体主题配置"></a>5. 字体主题配置</h2><p>虽然主题这个东西是一个比较个性化的东西，但是我还是要隆重推荐一下<code>Grovbox</code>主题，我 的<code>IDE</code>、<code>iTerm</code> 和 <code>Vim</code>都用的这个主题:</p>
+<p>Github 下载 iTerm2 的 <a target="_blank" rel="noopener" href="https://github.com/AmmarCodes/gruvbox-material-iterm2">gruvbox-material</a> 主题, 双击安装</p>
+<p>打开设置, Profiles, Default, Colors, 选择 <code>grovbox-material</code></p>
+<p>安装Fira字体, 及其对应Nerd版(配合devicons使用)</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew tap homebrew/cask-fonts<br>// 这个是给idea, vscode之类用<br>brew cask install font-fira-code<br>// iTerm2 vim 专用<br>brew cask install font-fira-code-nerd-font<br></code></pre></div></td></tr></table></figure>
+<p>打开<code>iTerm2</code>设置, Profiles, Default, Font,  选择 <code>Fira Code Nerd</code></p>
+<p>参考ohmyzsh提供的这些 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh/wiki/themes">主题</a>可以选一个自己喜欢的, 推荐agnoster</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd ~/Downloads<br>git clone https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git<br>cd oh-my-zsh-agnoster-fcamblor/<br>./install<br>vi .zshrc<br>ZSH_THEME=&quot;agnoster&quot;<br></code></pre></div></td></tr></table></figure>
+<p>去掉路径中的用户名，设置<code>DEFAULT_USER</code>和你的用户名一直即可:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> .zshrc 里增加：</span><br>DEFAULT_USER=&quot;riger&quot;<br></code></pre></div></td></tr></table></figure>
+<h2 id="6-插件安装及配置"><a href="#6-插件安装及配置" class="headerlink" title="6. 插件安装及配置"></a>6. 插件安装及配置</h2><p>安装一些好用的插件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew install autojump<br>git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions<br>git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting<br><br>vi .zshrc<br><span class="hljs-meta">#</span><span class="bash"> 修改如下</span><br>plugins=(<br>    git <br>    sublime<br>    zsh-autosuggestions<br>    autojump<br>    zsh-syntax-highlighting<br>)<br></code></pre></div></td></tr></table></figure>
+<p>简单说明一下我开启的这些插件：</p>
+<ul>
+<li><code>git</code>: 默认就开启的，可以看到文章第一张图，路径上即可显示当前分支是在<code>Master</code>，还有很多方便使用的<code>alias</code></li>
+</ul>
+<p>我常用的有：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ga=&#x27;git add&#x27;<br>gst=&#x27;git status&#x27;<br>gcmsg=&#x27;git commit -m&#x27;<br>glola=&#x27;git log --graph --pretty=&#x27;\&#x27;&#x27;%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#x27;\&#x27;&#x27; --all&#x27;<br><span class="hljs-meta">#</span><span class="bash"> 命令行输入 <span class="hljs-built_in">alias</span> 即可看到所有的<span class="hljs-built_in">alias</span></span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li><p><code>sublime</code>：<code>st 文件或路径</code>  使用<code>sublime</code>打开文件或路径；<code>stt</code> 打开当前路径</p>
+</li>
+<li><p><code>zsh-autosuggestions</code>：命令提示，用过的命令，按方向→自动完成</p>
+</li>
+</ul>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201227231810507.png" srcset="/img/loading.gif" alt="image-20201227231810507"></p>
+<ul>
+<li><code>autojump</code>: <code>j + 关键字</code> 进入你最近去过的含关键字的路径，比如我进过<code>jdk</code>的路径，以后只要输入：</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">j jdk<br></code></pre></div></td></tr></table></figure>
+<p>就可以回到<code>jdk</code>路径，是不是很方便？</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201227232454896.png" srcset="/img/loading.gif" alt="image-20201227232454896"></p>
+<ul>
+<li><code>zsh-syntax-highlighting</code>: <code>shell</code> 命令高亮，没有人能拒绝高亮。</li>
+</ul>
+<img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20200808150606814.png" srcset="/img/loading.gif" alt="image-20200808150606814" style="zoom:50%;" />
+
+<h2 id="7-其他"><a href="#7-其他" class="headerlink" title="7. 其他"></a>7. 其他</h2><p>以后开发相关的配置都是放在<code>.zshrc</code>中的，比如<code>PATH</code>配置，一些脚本参数配置等。</p>
+<p>还可以自行配置<code>Alias</code> 方便自己的使用，比如我配置的一些：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">alias py3=&quot;python3&quot;<br>alias openapk=&quot;open -a Finder app/build/outputs/apk&quot;<br>alias releaseapp=&quot;./gradlew assemblerelease&quot;<br>alias sqllogin=&quot;mysql -uroot -p123456&quot;<br>alias redisstart=&quot;redis-server /usr/local/etc/redis.conf&quot;<br>alias logcasher=&quot;pidcat net.worthtech.worthcasher&quot;<br>alias showAct=&quot;adb shell dumpsys activity top | grep ACTIVITY&quot;<br>alias starttom=&quot;~/Library/tomcat/bin/startup.sh&quot;<br>alias stoptom=&quot;~/Library/tomcat/bin/shutdown.sh&quot;<br>alias signapk=&quot;signtest app/build/outputs/apk/release/app-release-unsigned.apk&quot;<br>alias jmeter=&quot;~/dev/apache-jmeter-5.3/bin/jmeter&quot;<br>alias uninstallcasher=&quot;adb shell pm uninstall -k net.worthtech.worthcasher&quot;<br></code></pre></div></td></tr></table></figure>
+<p>配置完后不要忘记让配置生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">source .zshrc<br></code></pre></div></td></tr></table></figure>
+<p>Enjoy it !</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/tools/">tools</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/iTerm2/">iTerm2</a>
+                    
+                      <a class="hover-with-bg" href="/tags/macOS/">macOS</a>
+                    
+                      <a class="hover-with-bg" href="/tags/zsh/">zsh</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     Best <i class="iconfont icon-love"></i> for JioJio. 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
+      ga.l = +new Date;
+      ga('create', 'G-6VSHZ2S8ZE', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

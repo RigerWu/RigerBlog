@@ -142,7 +142,7 @@ j jdk
 
 - `zsh-syntax-highlighting`: `shell` 命令高亮，没有人能拒绝高亮。
 
-<img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20200808150606814.png" alt="image-20200808150606814" style="zoom:50%;" />
+![image-20201228101251109](https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201228101251109.png)
 
 ## 7. 其他
 

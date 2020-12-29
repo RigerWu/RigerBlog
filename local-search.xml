@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>后端开发需要掌握的SSH命令和技巧</title>
+    <link href="/2020/12/29/hou-duan-kai-fa-xu-yao-zhang-wo-de-ssh-ming-ling-he-ji-qiao/"/>
+    <url>/2020/12/29/hou-duan-kai-fa-xu-yao-zhang-wo-de-ssh-ming-ling-he-ji-qiao/</url>
+    
+    <content type="html"><![CDATA[<h1 id="后端开发需要掌握的-SSH-命令和技巧"><a href="#后端开发需要掌握的-SSH-命令和技巧" class="headerlink" title="后端开发需要掌握的 SSH 命令和技巧"></a>后端开发需要掌握的 SSH 命令和技巧</h1><blockquote><p>本教程仅针对<code>MacOS</code>、<code>Linux</code>平台，不适用<code>Windows</code></p></blockquote><h2 id="1-常用-SSH-命令"><a href="#1-常用-SSH-命令" class="headerlink" title="1. 常用 SSH 命令"></a>1. 常用 SSH 命令</h2><ul><li>生成本机上的 ssh 密钥对</li></ul><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh-keygen -t rsa -C &quot;xxxxx@xxxxx.com&quot;<br></code></pre></div></td></tr></table></figure><p>生成的公钥、私钥在<code>~/.ssh</code>目录下:</p><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201229134915683.png" alt="image-20201229134915683"></p><ol><li><code>id_rsa</code>是私钥</li><li><code>id_rsa.pub</code>是公钥，可以拷贝里面的字符串放到 Github 的后台，使用 Git 协议可以免密</li><li><code>config</code>是配置文件，后面会详细讲</li><li><code>know_hosts</code>是你信任的服务器列表，连接服务器，输入<code>yes</code>后会加一条</li></ol><ul><li>连接服务器</li></ul><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh -p port user@server_ip<br></code></pre></div></td></tr></table></figure><ul><li>文件拷贝</li></ul><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 注意这里的P用的大写的</span><br>scp -P port local_file user@server_ip:server_folder<br>scp -P port user@server_ip:server_file local_folder<br></code></pre></div></td></tr></table></figure><h2 id="2-命令简化和免密"><a href="#2-命令简化和免密" class="headerlink" title="2. 命令简化和免密"></a>2. 命令简化和免密</h2><p>可以看到每次连接服务器或者拷贝文件都需要输入完整的用户名、ip 之后还要输入密码，非常麻烦</p><p>先使用配置文件来简化命令：</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">vi .ssh/config<br></code></pre></div></td></tr></table></figure><p>这样配置：</p><figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">Host dns<br>    HostName config.rigerwu.com<br>    <span class="hljs-keyword">User</span> <span class="hljs-title">riger</span><br>    Port <span class="hljs-number">22</span><br></code></pre></div></td></tr></table></figure><p><code>Host</code>后是你给服务器取的别名，我这里用的<code>“dns”</code>，<code>HostName</code>填域名或<code>ip</code>都可以，然后是用户名和端口。</p><p>以后我们直接使用<code>ssh dns</code>就可以访问服务器，名字还可以用<code>tab</code>来代码提示：</p><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201229143645153.png" alt="image-20201229143645153"></p><p>包括<code>scp</code>命令也可以来简化：</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp local_file dns:server_folder<br></code></pre></div></td></tr></table></figure><p>再来做免密登录，使用<code>ssh-copy-id</code>命令吧自己的公钥，拷贝到服务器端的 <code>.ssh/authorized_keys</code>中，这样以后就不用输入密码了：</p><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201229144130799.png" alt="image-20201229144130799"></p><p>这个再<code>ssh dns</code>就已经可以直接免密登录了：</p><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201229144411394.png" alt="image-20201229144411394"></p><p>甚至<code>scp</code>命令都能<code>tab</code>提示远程的路径：</p><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201229144342128.png" alt="image-20201229144342128"></p><p>配合上<code>zsh</code>的代码提示或 alias，常用的文件拷贝就变得非常方便！</p><h2 id="3-解决-SSH-超时中断"><a href="#3-解决-SSH-超时中断" class="headerlink" title="3. 解决 SSH 超时中断"></a>3. 解决 SSH 超时中断</h2><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">vi .ssh/config<br></code></pre></div></td></tr></table></figure><p>这样配置：</p><figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">Host</span> *<br>    <span class="hljs-attribute">TCPKeepAlive</span> yes<br>    <span class="hljs-attribute">ServerAliveInterval</span> <span class="hljs-number">60</span><br>    <span class="hljs-attribute">ServerAliveCountMax</span> <span class="hljs-number">5</span><br></code></pre></div></td></tr></table></figure><p>但是有些服务端还是会一段时间无输入就终端连接，在服务端的<code>.bash_profile</code>中增加一行:</p><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">export TMOUT=0<br></code></pre></div></td></tr></table></figure><p>设置不限制超时时间，这样就可以保持连接不中断了</p><p>Enjoy it ！</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>tools</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ssh</tag>
+      
+      <tag>tools</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>macOS iTerm2 开发环境配置</title>
     <link href="/2020/12/25/macos-iterm2-kai-fa-huan-jing-pei-zhi/"/>
     <url>/2020/12/25/macos-iterm2-kai-fa-huan-jing-pei-zhi/</url>

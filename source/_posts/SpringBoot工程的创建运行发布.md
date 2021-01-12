@@ -274,6 +274,6 @@ Stop web-simple-0.0.1-SNAPSHOT.jar successfully by kill -15
  ~ 
 ```
 
-源码及脚本都在Github上
+源码及脚本都在[Github](https://github.com/RigerWu/web-starter-demos)上
 
 Enjoy it!

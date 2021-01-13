@@ -2,20 +2,20 @@
 title: SpringBoot Logback日志打印详解
 date: 2021-01-13 22:12:40
 index_img: https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210113155958249.png
-categories: 
-- spring boot
-tags: 
-- log
-- logback
+categories:
+  - spring boot
+tags:
+  - log
+  - logback
 ---
 
 # SpringBoot Logback 日志打印详解
 
-## 1. 为什么不要用println
+## 1. 为什么不要用 println
 
 日志打印对于后端服务来说是极其重要的，很多时候我们定位问题都需要去 log 里找
 
-Java 初学阶段，我们会经常用 `System.out.println()`来打印log，但是实际开发千万不要这么做
+Java 初学阶段，我们会经常用 `System.out.println()`来打印 log，但是实际开发千万不要这么做
 
 一来不够灵活，不能存文件、不能区分级别、不能配置开关
 
@@ -89,19 +89,19 @@ SpringBoot 使用 SLF4j 作为日志门面
 
 各个日志实现的配置文件：
 
-|  框架   |                           配置文件                           |
-| :-----: | :----------------------------------------------------------: |
-| Logback | logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, or `logback.groovy |
-| Log4j2  |              log4j2-spring.xml` or `log4j2.xml               |
-|   JUL   |                      logging.properties                      |
+|  框架   |                                 配置文件                                  |
+| :-----: | :-----------------------------------------------------------------------: |
+| Logback | logback-spring.xml, logback-spring.groovy, logback.xml, or logback.groovy |
+| Log4j2  |                      log4j2-spring.xml or log4j2.xml                      |
+|   JUL   |                            logging.properties                             |
 
-Spring Boot 官方推荐使用 `-spring`后缀的配置文件，这样 Spring 可以完全控制日志的初始化，日志也可以使用Profile
+Spring Boot 官方推荐使用 `-spring`后缀的配置文件，这样 Spring 可以完全控制日志的初始化，日志也可以使用 Profile
 
-## 3. Logback介绍
+## 3. Logback 介绍
 
 Logback 是以前非常流畅的日志框架 Log4j 的继任者，它更小，但性能更强，更多优点看[官方文档](http://logback.qos.ch/reasonsToSwitch.html)
 
-它实现了日志门面Slf4j，我们日志打印使用接口抽象即可：
+它实现了日志门面 Slf4j，我们日志打印使用接口抽象即可：
 
 ```java
 private final Log log = LogFactory.getLog(ClassName.class);
@@ -137,7 +137,7 @@ public class LogController {
 }
 ```
 
-## 4. Logback配置文件
+## 4. Logback 配置文件
 
 这里给出我常用的`logback-spring.xml`，注释很详细，可以自行修改内容
 
@@ -306,7 +306,7 @@ public class LogController {
 >
 > Generating the line number information is not particularly fast. Thus, its use should be avoided unless execution speed is not an issue.
 
-看一下使用我自定义的Pattern打印的带颜色行号的日志格式：
+看一下使用我自定义的 Pattern 打印的带颜色行号的日志格式：
 
 ![image-20210113155958249](https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210113155958249.png)
 
@@ -329,44 +329,44 @@ logging:
   group:
     tomcat: "org.apache.catalina,org.apache.coyote,org.apache.tomcat"
   level:
-  	tomcat: "trace"
+  tomcat: "trace"
 ```
 
 Spring Boot 预定义了两个分组
 
-| Name | Loggers                                                      |
-| ---- | ------------------------------------------------------------ |
-| web  | org.springframework.core.codec, org.springframework.http`, `org.springframework.web, org.springframework.boot.actuate.endpoint.web, org.springframework.boot.web.servlet.ServletContextInitializerBeans |
-| sql  | org.springframework.jdbc.core`, `org.hibernate.SQL, org.jooq.tools.LoggerListener |
+| Name | Loggers                                                                                                                                                                                              |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| web  | org.springframework.core.codec, org.springframework.http,org.springframework.web, org.springframework.boot.actuate.endpoint.web, org.springframework.boot.web.servlet.ServletContextInitializerBeans |
+| sql  | org.springframework.jdbc.core, org.hibernate.SQL, org.jooq.tools.LoggerListener                                                                                                                      |
 
 ## 6. 统一日志输出
 
-我用了一个开源项目XXX，它日志框架用的是 Log4j ，我怎么统一用 SLF4j+Logback 来输出？
+我用了一个开源项目 XXX，它日志框架用的是 Log4j ，我怎么统一用 SLF4j+Logback 来输出？
 
 SLF4j 官方文档给出了下图的指引：
 
 ![img](https://riger.oss-cn-shanghai.aliyuncs.com/img/legacy.png)
 
-已切换 Log4j为例：
+已切换 Log4j 为例：
 
 我们只需要引入 `log4j-over-slf4j.jar`,然后把开源项目的 log4j 依赖排除即可
 
 ```xml
 <!-- 这三个依赖可以根据需要选择 -->
-<dependency>  
-   <groupId>org.slf4j</groupId>  
-   <artifactId>jcl-over-slf4j</artifactId>  
-    <version>${org.slf4j-version}</version>  
-</dependency>  
-<dependency>  
-    <groupId>org.slf4j</groupId>  
-    <artifactId>log4j-over-slf4j</artifactId>  
-    <version>${org.slf4j-version}</version>  
-</dependency>  
-<dependency>  
-    <groupId>org.slf4j</groupId>  
-    <artifactId>jul-to-slf4j</artifactId>  
-    <version>${org.slf4j-version}</version>  
+<dependency>
+   <groupId>org.slf4j</groupId>
+   <artifactId>jcl-over-slf4j</artifactId>
+    <version>${org.slf4j-version}</version>
+</dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>log4j-over-slf4j</artifactId>
+    <version>${org.slf4j-version}</version>
+</dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jul-to-slf4j</artifactId>
+    <version>${org.slf4j-version}</version>
 </dependency>
 ```
 
@@ -375,4 +375,3 @@ SLF4j 官方文档给出了下图的指引：
 源码及脚本都在[Github](https://github.com/RigerWu/web-starter-demos)上
 
 Enjoy it!
-

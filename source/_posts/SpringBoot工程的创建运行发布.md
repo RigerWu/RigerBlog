@@ -1,6 +1,6 @@
 ---
 title: SpringBoot工程的创建运行发布
-date: 2021-01-20 13:09:12
+date: 2021-01-10 13:09:12
 index_img: https://riger.oss-cn-shanghai.aliyuncs.com/img/20210112150409.png
 categories: 
 - spring boot
@@ -79,7 +79,7 @@ spring:
 
 ![image-20210112140241936](https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210112140241936.png)
 
-如图，一般开发的时候，我会制定比较小的堆内存大小，这样可以启动多个服务而不卡
+如图，一般开发的时候，我会指定比较小的堆内存大小，这样可以启动多个服务而不卡
 
 还可以指定服务端口，比如要跑多个服务，直接点左上角复制一份配置，改个端口号就可以
 

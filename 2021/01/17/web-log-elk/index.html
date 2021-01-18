@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="瑞哥的个人博客">
+  <meta name="author" content="Riger Wu">
+  <meta name="keywords" content="Java,Kotlin,Android,Tool,Vim">
+  <title>使用ELK记录微服务日志 - Riger</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/gruvbox-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"rigerwu.github.io","root":"/","version":"1.8.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":"G-6VSHZ2S8ZE","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"8wYDzulBHiphLtKFUB4zUzYN-gzGzoHsz","app_key":"Mm0QSy1Fp103x6Bp7JDnuYGA","server_url":"https://8wydzulb.lc-cn-n1-shared.com"}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Riger's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/universe.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="使用ELK记录微服务日志">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-17 22:12" pubdate>
+        2021年1月17日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      85
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">使用ELK记录微服务日志</h1>
+            
+            <div class="markdown-body">
+              <h1 id="使用ELK记录微服务日志"><a href="#使用ELK记录微服务日志" class="headerlink" title="使用ELK记录微服务日志"></a>使用ELK记录微服务日志</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>上一节我们讲解了 Logback 的配置，完成了日志打印到文件的第一步</p>
+<p>一般来说，后台服务规模比较小的情况下，这样是没问题的，但是一旦分布式部署众多服务器，日志的查询和管理就成了很大的问题</p>
+<p>这个时候我们可以使用比较成熟的分布式日志解决方案：ELK</p>
+<p>ELK 是 Elasticsearch、Logstash、Kibana 的缩写</p>
+<p>简单来说就是通过 Logstash 收集处理日志，然后存储到 Elasticsearch，在通过 Kinbana 进行可视化的搜索、查询、汇聚分析。</p>
+<p>我们使用使用 SpringBoot 来构建微服务，可以配置 <a target="_blank" rel="noopener" href="https://github.com/logstash/logstash-logback-encoder">logstash-logback-encoder</a> 通过tcp或udp把产生的日志传送到 Logstash服务</p>
+<p>简单流程如图：</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/elk-0931238.png" srcset="/img/loading.gif" alt="elk"></h2><h2 id="2-搭建"><a href="#2-搭建" class="headerlink" title="2. 搭建"></a>2. 搭建</h2><p>为了方便起见，我们使用开源项目 <a target="_blank" rel="noopener" href="https://github.com/deviantony/docker-elk">docker-elk</a> 的配置来进行安装</p>
+<p>环境要求：</p>
+<ul>
+<li>Docker 版本 17.05 以上 <code>docker version</code></li>
+<li>Docker Compose 版本 1.20.0 以上 <code>docker-compose version</code></li>
+<li>2G 内存以上</li>
+</ul>
+<p>这里我使用我电脑上装的一台虚拟机，ip 是 <code>192.168.0.2</code></p>
+<p>在服务器上 clone 项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/deviantony/docker-elk.git<br><span class="hljs-comment"># Redhat 和 CentOS 执行一下以下语句确保能正常使用</span><br>chcon -R system_u:object_r:admin_home_t:s0 docker-elk/<br></code></pre></div></td></tr></table></figure>
+<p>起目录结构如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css"><span class="hljs-selector-tag">docker-elk</span>/<br>├── <span class="hljs-selector-tag">docker-compose</span><span class="hljs-selector-class">.yml</span><br>├── <span class="hljs-selector-tag">docker-stack</span><span class="hljs-selector-class">.yml</span><br>├── <span class="hljs-selector-tag">elasticsearch</span><br>│   ├── <span class="hljs-selector-tag">config</span><br>│   └── <span class="hljs-selector-tag">Dockerfile</span><br>├── <span class="hljs-selector-class">.env</span><br>├── <span class="hljs-selector-tag">extensions</span><br>│   ├── <span class="hljs-selector-tag">apm-server</span><br>│   ├── <span class="hljs-selector-tag">curator</span><br>│   ├── <span class="hljs-selector-tag">enterprise-search</span><br>│   ├── <span class="hljs-selector-tag">logspout</span><br>│   ├── <span class="hljs-selector-tag">metricbeat</span><br>│   └── <span class="hljs-selector-tag">README</span><span class="hljs-selector-class">.md</span><br>├── <span class="hljs-selector-tag">kibana</span><br>│   ├── <span class="hljs-selector-tag">config</span><br>│   └── <span class="hljs-selector-tag">Dockerfile</span><br>├── <span class="hljs-selector-tag">LICENSE</span><br>├── <span class="hljs-selector-tag">logstash</span><br>│   ├── <span class="hljs-selector-tag">config</span><br>│   ├── <span class="hljs-selector-tag">Dockerfile</span><br>│   └── <span class="hljs-selector-tag">pipeline</span><br>└── <span class="hljs-selector-tag">README</span><span class="hljs-selector-class">.md</span><br></code></pre></div></td></tr></table></figure>
+<p><code>.env</code> 文件定义了使用的 Elasticsearch 版本，我这里用是 <code>7.10.1</code>，有需要可以自行修改</p>
+<p>然后我们修改一下 Logstash 的 build 配置，安装 json_lines 插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">vi logstash/Dockerfile<br><span class="hljs-comment"># 添加下面一行在最后</span><br>RUN bin/logstash-plugin install logstash-codec-json_lines<br></code></pre></div></td></tr></table></figure>
+<p>再修改 Logstash 的配置文件 <code>vi logstash/pipeline/logstash.conf</code>，配置如下：</p>
+<figure class="highlight puppet"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>        beats &#123;<br>                <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5044</span><br>        &#125;<br><br>        <span class="hljs-keyword">tcp</span> &#123;<br>                <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5000</span><br>                <span class="hljs-attr">hots</span> =&gt; <span class="hljs-string">&quot;0.0.0.0&quot;</span><br>                <span class="hljs-attr">codec</span> =&gt; json_lines<br>        &#125;<br>&#125;<br><br><span class="hljs-comment">## Add your filters / logstash plugins configuration here</span><br><br><span class="hljs-keyword">output</span> &#123;<br>        elasticsearch &#123;<br>                <span class="hljs-attr">hosts</span> =&gt; <span class="hljs-string">&quot;elasticsearch:9200&quot;</span><br>                <span class="hljs-attr">user</span> =&gt; <span class="hljs-string">&quot;elastic&quot;</span><br>                <span class="hljs-attr">password</span> =&gt; <span class="hljs-string">&quot;changeme&quot;</span><br>                <span class="hljs-attr">ecs_compatibility</span> =&gt; disabled<br>                <span class="hljs-attr">codec</span> =&gt; json<br>        &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>我们可以直接启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">docker-compose up<br></code></pre></div></td></tr></table></figure>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210117203759711.png" srcset="/img/loading.gif" alt="image-20210117203759711"></p>
+<p>第一次安装会下载镜像，并在镜像基础上 build，需要耐心等待</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210117211638847.png" srcset="/img/loading.gif" alt="image-20210117211638847"></p>
+<p>当我们看到三个 done，并且容器也开始打印 log 的时候，就启动完成了，后面 还需要等待 1 分钟左右，Kibana 才可以访问</p>
+<p>我们访问之前，先用命令访问 Kibana Api，创建一个 index pattern：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">curl -XPOST -D- <span class="hljs-string">&#x27;http://localhost:5601/api/saved_objects/index-pattern&#x27;</span> \<br>    -H <span class="hljs-string">&#x27;Content-Type: application/json&#x27;</span> \<br>    -H <span class="hljs-string">&#x27;kbn-version: 7.10.2&#x27;</span> \<br>    -u elastic:changeme \<br>    -d <span class="hljs-string">&#x27;&#123;&quot;attributes&quot;:&#123;&quot;title&quot;:&quot;logstash-*&quot;,&quot;timeFieldName&quot;:&quot;@timestamp&quot;&#125;&#125;&#x27;</span><br><br><span class="hljs-comment"># 可以看到成功创建了</span><br>[root@localhost docker-elk]<span class="hljs-comment"># curl -XPOST -D- &#x27;http://localhost:5601/api/saved_objects/index-pattern&#x27; \</span><br>&gt;     -H <span class="hljs-string">&#x27;Content-Type: application/json&#x27;</span> \<br>&gt;     -H <span class="hljs-string">&#x27;kbn-version: 7.10.2&#x27;</span> \<br>&gt;     -u elastic:changeme \<br>&gt;     -d <span class="hljs-string">&#x27;&#123;&quot;attributes&quot;:&#123;&quot;title&quot;:&quot;logstash-*&quot;,&quot;timeFieldName&quot;:&quot;@timestamp&quot;&#125;&#125;&#x27;</span><br>HTTP/1.1 200 OK<br>kbn-name: kibana<br>kbn-license-sig: 9c18aa7a665c803facb3814b41effaf3fd82a9af5581d75bf4d30992a38908a7<br>content-type: application/json; charset=utf-8<br>cache-control: private, no-cache, no-store, must-revalidate<br>content-length: 280<br>Date: Sun, 17 Jan 2021 13:26:40 GMT<br>Connection: keep-alive<br><br>&#123;<span class="hljs-string">&quot;type&quot;</span>:<span class="hljs-string">&quot;index-pattern&quot;</span>,<span class="hljs-string">&quot;id&quot;</span>:<span class="hljs-string">&quot;a1a4cb40-58c7-11eb-a33e-6bbb0a638f52&quot;</span>,<span class="hljs-string">&quot;attributes&quot;</span>:&#123;<span class="hljs-string">&quot;title&quot;</span>:<span class="hljs-string">&quot;logstash-*&quot;</span>,<span class="hljs-string">&quot;timeFieldName&quot;</span>:<span class="hljs-string">&quot;@timestamp&quot;</span>&#125;,<span class="hljs-string">&quot;references&quot;</span>:[],<span class="hljs-string">&quot;migrationVersion&quot;</span>:&#123;<span class="hljs-string">&quot;index-pattern&quot;</span>:<span class="hljs-string">&quot;7.6.0&quot;</span>&#125;,<span class="hljs-string">&quot;updated_at&quot;</span>:<span class="hljs-string">&quot;2021-01-17T13:26:39.859Z&quot;</span>,<span class="hljs-string">&quot;version&quot;</span>:<span class="hljs-string">&quot;Wzc2LDNd&quot;</span>,<span class="hljs-string">&quot;namespaces&quot;</span>:[<span class="hljs-string">&quot;default&quot;</span>]&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="3-Kibana配置"><a href="#3-Kibana配置" class="headerlink" title="3. Kibana配置"></a>3. Kibana配置</h2><p>直接访问 192.168.0.2:5601  </p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210117230703734.png" srcset="/img/loading.gif" alt="image-20210117230703734"></p>
+<p>输入 docker-elk 配置的默认账户名：<code>elastic</code> 密码：<code>changeme</code>即可访问</p>
+<p>我这里测试使用就不改密码了 ，生产环境建议按如下步骤修改密码：</p>
+<figure class="highlight vala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vala"><span class="hljs-meta"># 1. 批量生产随机密码,记录下密码</span><br>docker-compose exec -T elasticsearch bin/elasticsearch-setup-passwords auto --batch<br><span class="hljs-meta"># 2. 删除 docker-compose.yml 中的 ELASTIC_PASSWORD</span><br><span class="hljs-meta"># 3. 修改kibana/config/kibana.yml 使用 kibana_system 用户和你自己的密码(小于7.8.0版本可以用 kibana y用户)</span><br><span class="hljs-meta">#    修改logstash/config/logstash.yml 使用 logstash_system 用户和你自己的密码</span><br><span class="hljs-meta">#    修改logstash/pipeline/logstash.conf 修改 elastic 用户的密码</span><br></code></pre></div></td></tr></table></figure>
+<p>我们点击左侧菜单栏中的 Disocver：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118090532933.png" srcset="/img/loading.gif" alt="image-20210118090532933"></p>
+<p>可以看到，我们之前创建的 index pattern 已经有了：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118090748210.png" srcset="/img/loading.gif" alt="image-20210118090748210"></p>
+<p>不过这个时候还没有数据，我们接着往下看</p>
+<h2 id="4-微服务配置"><a href="#4-微服务配置" class="headerlink" title="4. 微服务配置"></a>4. 微服务配置</h2><p>这里还是再我们上回的 web-log 的基础上修改</p>
+<p>引入 logstash-logback-encoder：</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--集成logstash--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>net.logstash.logback<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>logstash-logback-encoder<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>6.6<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>为了不影响之前的配置，我们拷贝一份 <code>logback-spring-logstash.xml</code>，并增加一个 dev profile：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118093533712.png" srcset="/img/loading.gif" alt="image-20210118093533712"></p>
+<p>dev 的 yml 配置如下，这里我们指定配置文件，和 Logstash的 host：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">web-simple</span><br><span class="hljs-attr">logstash:</span><br>  <span class="hljs-attr">host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.2</span><br><span class="hljs-attr">logging:</span><br>  <span class="hljs-attr">level:</span><br>    <span class="hljs-attr">root:</span> <span class="hljs-string">debug</span><br>  <span class="hljs-attr">config:</span> <span class="hljs-string">classpath:logback-spring-logstash.xml</span><br></code></pre></div></td></tr></table></figure>
+<p>log 完整配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="hljs-comment">&lt;!-- 日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出 --&gt;</span><br><span class="hljs-comment">&lt;!-- scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true --&gt;</span><br><span class="hljs-comment">&lt;!-- scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 --&gt;</span><br><span class="hljs-comment">&lt;!-- de<span class="hljs-doctag">bug:</span>当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span> <span class="hljs-attr">scan</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">scanPeriod</span>=<span class="hljs-string">&quot;60 seconds&quot;</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!--LogStash访问host--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">springProperty</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;LOG_STASH_HOST&quot;</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;context&quot;</span> <span class="hljs-attr">source</span>=<span class="hljs-string">&quot;logstash.host&quot;</span> <span class="hljs-attr">defaultValue</span>=<span class="hljs-string">&quot;localhost&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- ERROR日志格式,后面在对应的appender定义中指定pattern为此值，即可以按照此处的日志格式进行输出 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;FILE_ERROR_PATTERN&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;FILE_LOG_PATTERN:-%d&#123;$&#123;LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS&#125;&#125; $&#123;LOG_LEVEL_PATTERN:-%5p&#125; $&#123;PID:- &#125; --- [%t] %-40.40logger&#123;39&#125; %file:%line: %m%n$&#123;LOG_EXCEPTION_CONVERSION_WORD:-%wEx&#125;&#125;&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!--  日志文件位置  --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;LOG_HOME&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;logs&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;LOG_FILE_SIZE&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;100MB&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 彩色日志 --&gt;</span><br>    <span class="hljs-comment">&lt;!-- 彩色日志依赖的渲染类 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">conversionRule</span> <span class="hljs-attr">conversionWord</span>=<span class="hljs-string">&quot;clr&quot;</span> <span class="hljs-attr">converterClass</span>=<span class="hljs-string">&quot;org.springframework.boot.logging.logback.ColorConverter&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">conversionRule</span> <span class="hljs-attr">conversionWord</span>=<span class="hljs-string">&quot;wex&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">converterClass</span>=<span class="hljs-string">&quot;org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">conversionRule</span> <span class="hljs-attr">conversionWord</span>=<span class="hljs-string">&quot;wEx&quot;</span></span><br><span class="hljs-tag">                    <span class="hljs-attr">converterClass</span>=<span class="hljs-string">&quot;org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter&quot;</span>/&gt;</span><br><br><br>    <span class="hljs-comment">&lt;!-- 彩色日志格式,后面在对应的appender定义中指定pattern为此值，即可以按照此处的日志格式进行输出  --&gt;</span><br>    <span class="hljs-comment">&lt;!-- 默认情况下， 自带的CONSOLE_LOG_PATTERN属性，即为彩色的，此处重新定义了个新的属性，用于演示彩色控制台的使用示例--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;CONSOLE_LOG_PATTERN_COLOR&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;CONSOLE_LOG_PATTERN:-%clr(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;)&#123;faint&#125; %clr($&#123;LOG_LEVEL_PATTERN:-%5p&#125;) %clr($&#123;PID:- &#125;)&#123;magenta&#125; %clr(---)&#123;faint&#125; %clr([%15.15t])&#123;faint&#125; %clr(%-40.40logger&#123;0&#125;)&#123;cyan&#125; %clr(:)&#123;faint&#125; %m%n$&#123;LOG_EXCEPTION_CONVERSION_WORD:-%wEx&#125;&#125;&quot;</span>/&gt;</span><br><br><br>    <span class="hljs-comment">&lt;!-- 解说下具体的pattern中属性的含义,详细参见http://logback.qos.ch/manual/layouts.html--&gt;</span><br>    <span class="hljs-comment">&lt;!-- %logger&#123;x&#125;，或者写为%c&#123;x&#125;，表示类名信息，如果x为0则表示仅输出类名，如果x大于0则尝试输出全路径，并按照指定的x值进行缩写。</span><br><span class="hljs-comment">        比如com.test.sample.Main：</span><br><span class="hljs-comment">        设置%logger&#123;0&#125;为Main</span><br><span class="hljs-comment">        设置%logger&#123;5&#125;可缩写为c.t.s.Main</span><br><span class="hljs-comment">        设置%logger&#123;20&#125;为com.test.sample.Main--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %d表示日期信息(或者%date)，默认格式为【yyyy-MM-dd HH:mm:ss,SSS】，可以通过%d&#123;x&#125;自定义格式，比如%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %p表示日志的level,或者%le\%level--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %L表示相对应的行号，或者%line--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %m表示实际的需要输出的日志内容字符串,或者%msg\%message都可以--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %replace(p)&#123;r,t&#125;表示对p中给定的内容进行字符串替换，将r替换为t，支持正则，比如将p中的换行替换为下划线，防止日志攻击--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %M表示方法名称，或者%method也可以--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %t表示线程名称，或者%thread也可以--&gt;</span><br>    <span class="hljs-comment">&lt;!-- %ex&#123;x&#125;用于指定错误异常堆栈的打印策略，x可以为short\full或者具体数字，表示打印多少行堆栈--&gt;</span><br>    <span class="hljs-comment">&lt;!--  %n表示换行--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 字符串对齐、截取、格式化说明：</span><br><span class="hljs-comment">         在上述的各个占位符中，在%和具体字符之间，可以插入格式化指令，以%c为例，如下：</span><br><span class="hljs-comment">         %20c 表示%c的内容如果不足20位，则在左侧以空格填充满20长度</span><br><span class="hljs-comment">         %-20c 与%20c相似，区别在于，会在右侧以空格填满20长度</span><br><span class="hljs-comment">         %.20c 表示%c内容如果超过20，则会截取掉开头的内容，只留下右侧20位长度</span><br><span class="hljs-comment">         %.-20c 与%.20c相似，区别在于，会截取掉末尾的内容，只留下开头20位长度</span><br><span class="hljs-comment">         以此类推，还可以组合出如下使用方式：</span><br><span class="hljs-comment">         %20.30c 表示最短20位，最长30位，如果不足20位则左侧补齐空格，如果超过30位则丢弃左侧开头的字符串</span><br><span class="hljs-comment">         %-20.30c 和%20.30c类似，区别在于不足20位的时候，在右侧补齐空格</span><br><span class="hljs-comment">         %-20.-30c 和%-20.30c类似，区别在于超过30位的时候会丢弃结尾部分的字符串</span><br><span class="hljs-comment">         %20.-30c 和20.30c类似，区别在于超过30位的时候会丢弃结尾部分的字符串</span><br><span class="hljs-comment">        --&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;SELF_DEFINE_LOG_PATTERN&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;[%clr(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;)&#123;faint&#125;] [%clr(%5.5p)&#123;magenta&#125;] [%clr(%5.10t)&#123;faint&#125;] [%clr(%30.30c&#123;0&#125;.%20.20M:%4.4L)&#123;cyan&#125;]  -&gt; %replace(%.-300m)&#123;&#x27;\r\n&#x27;,&#x27;__&#x27;&#125;%ex&#123;full&#125;%n&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- Spring Boot 提供了一个默认的 xml 配置，可以按照如下方式引入 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">resource</span>=<span class="hljs-string">&quot;org/springframework/boot/logging/logback/defaults.xml&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 引入application.yml配置文件，后续可以直接引用里面的属性值--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 注意：在此文件中直接$&#123;&#125;的方式引用application.yml里面配置可能会报错.</span><br><span class="hljs-comment">    因为logback.xml的加载顺序早于springboot的application.yml (或application.properties) 配置文件。</span><br><span class="hljs-comment">    所以可以先springProperty的方式定义个本地变量引入进来，再进行引用此本地变量--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 可以将一些公共的内容放到application.yml里面去配置，然后此文件中引用，后续可以避免修改此xml，简单的参数直接修改下application.yml就行了--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 比如将日志存放路径与文件大小信息从配置中读取，这样dev和prod可以指定不同的逻辑--&gt;</span><br>    <span class="hljs-comment">&lt;!--    &lt;property resource=&quot;application.yml&quot;/&gt;--&gt;</span><br>    <span class="hljs-comment">&lt;!--    &lt;springProperty scope=&quot;context&quot; name=&quot;LOG_HOME&quot; source=&quot;selfdefine.logfile.rootPath&quot;/&gt;--&gt;</span><br>    <span class="hljs-comment">&lt;!--    &lt;springProperty scope=&quot;context&quot; name=&quot;LOG_FILE_SIZE&quot; source=&quot;selfdefine.logfile.max-size&quot;/&gt;--&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">appender</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;CONSOLE&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.classic.filter.LevelFilter&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">level</span>&gt;</span>INFO<span class="hljs-tag">&lt;/<span class="hljs-name">level</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 指定此append对应的日志内容的格式--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoder</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">pattern</span>&gt;</span>$&#123;CONSOLE_LOG_PATTERN_COLOR&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">pattern</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">charset</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">charset</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">encoder</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">appender</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!--  生产慎用!!! 打印方法名和行号会对性能有损耗,服务无性能要求可用  --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">appender</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;CONSOLE2&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.classic.filter.LevelFilter&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">level</span>&gt;</span>INFO<span class="hljs-tag">&lt;/<span class="hljs-name">level</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- 指定此append对应的日志内容的格式--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoder</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">pattern</span>&gt;</span>$&#123;SELF_DEFINE_LOG_PATTERN&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">pattern</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">charset</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">charset</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">encoder</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">appender</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!--  文件输出，默认Info级别  --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">appender</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;FILE&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;</span>&gt;</span><br>            <span class="hljs-comment">&lt;!-- 指定过滤的日志级别，只有等于或者高于此级别的，才会通过此appender进行输出--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">level</span>&gt;</span>Info<span class="hljs-tag">&lt;/<span class="hljs-name">level</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，那么</span><br><span class="hljs-comment">        当天日志是&lt;File&gt;，明天会自动把今天的日志改名为今天的日期。即，&lt;File&gt; 的日志都是当天的。--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">File</span>&gt;</span>$&#123;LOG_HOME&#125;/web-log.log<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--滚动策略，按照时间滚动 TimeBasedRollingPolicy--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">rollingPolicy</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--文件路径，支持相对路径或者绝对路径（尽量避免相对路径，通过绝对路径保证存储位置的固定）,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间--&gt;</span><br>            <span class="hljs-comment">&lt;!-- 指定文件的路径以及对应的文件命名格式，其中%i表示递增标识ID序号，日志切换绕接的时候递增--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">FileNamePattern</span>&gt;</span>$&#123;LOG_HOME&#125;/Log._%d&#123;yyyy-MM-dd&#125;.part_%i.log<span class="hljs-tag">&lt;/<span class="hljs-name">FileNamePattern</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--保留日志天数--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">maxHistory</span>&gt;</span>180<span class="hljs-tag">&lt;/<span class="hljs-name">maxHistory</span>&gt;</span><br>            <span class="hljs-comment">&lt;!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志--&gt;</span><br>            <span class="hljs-comment">&lt;!--&lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;--&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">timeBasedFileNamingAndTriggeringPolicy</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;</span>&gt;</span><br>                <span class="hljs-comment">&lt;!-- maxFileSize:这是活动文件的大小--&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">maxFileSize</span>&gt;</span>$&#123;LOG_FILE_SIZE&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">maxFileSize</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">timeBasedFileNamingAndTriggeringPolicy</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">rollingPolicy</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--&lt;triggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy&quot;&gt;--&gt;</span><br>        <span class="hljs-comment">&lt;!--&lt;maxFileSize&gt;1KB&lt;/maxFileSize&gt;--&gt;</span><br>        <span class="hljs-comment">&lt;!--&lt;/triggeringPolicy&gt;--&gt;</span><br><br>        <span class="hljs-comment">&lt;!-- 指定此append对应的日志内容的格式--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoder</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">pattern</span>&gt;</span>$&#123;FILE_LOG_PATTERN&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">pattern</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">charset</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">charset</span>&gt;</span> <span class="hljs-comment">&lt;!-- 此处设置字符集 --&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">encoder</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">appender</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!--日志输出到LogStash--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">appender</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;LOGSTASH&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;net.logstash.logback.appender.LogstashTcpSocketAppender&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">destination</span>&gt;</span>$&#123;LOG_STASH_HOST&#125;:5000<span class="hljs-tag">&lt;/<span class="hljs-name">destination</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">encoder</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">providers</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">timestamp</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">timeZone</span>&gt;</span>Asia/Shanghai<span class="hljs-tag">&lt;/<span class="hljs-name">timeZone</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">timestamp</span>&gt;</span><br>                <span class="hljs-comment">&lt;!--自定义日志输出格式--&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">pattern</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">pattern</span>&gt;</span><br>                        &#123;<br>                        &quot;project&quot;: &quot;web-mall&quot;,<br>                        &quot;level&quot;: &quot;%level&quot;,<br>                        &quot;service&quot;: &quot;$&#123;APP_NAME:-&#125;&quot;,<br>                        &quot;pid&quot;: &quot;$&#123;PID:-&#125;&quot;,<br>                        &quot;thread&quot;: &quot;%thread&quot;,<br>                        &quot;class&quot;: &quot;%logger&quot;,<br>                        &quot;message&quot;: &quot;%message&quot;,<br>                        &quot;stack_trace&quot;: &quot;%exception&#123;20&#125;&quot;<br>                        &#125;<br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">pattern</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">pattern</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">providers</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">encoder</span>&gt;</span><br>        <span class="hljs-comment">&lt;!--当有多个LogStash服务时，设置访问策略为轮询--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">connectionStrategy</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">roundRobin</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">connectionTTL</span>&gt;</span>5 minutes<span class="hljs-tag">&lt;/<span class="hljs-name">connectionTTL</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">roundRobin</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">connectionStrategy</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">appender</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 指定日志输出到哪些位置、以及root日志的输出level--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 默认情况下的使用，任何spring profile值情况下都会使用下面的配置，即输出到console中--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">root</span> <span class="hljs-attr">level</span>=<span class="hljs-string">&quot;info&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;CONSOLE2&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 在SpringBoot中，可以通过springProfile属性来实现在不同环境上执行不同的输出策略，如下示例中指定pro和dev上有不同的策略--&gt;</span><br>    <span class="hljs-comment">&lt;!-- 指定在prod环境使用的输出配置--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">springProfile</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;pro&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">root</span> <span class="hljs-attr">level</span>=<span class="hljs-string">&quot;info&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;FILE&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">springProfile</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 指定在dev环境使用的输出配置--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">springProfile</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;dev&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">root</span> <span class="hljs-attr">level</span>=<span class="hljs-string">&quot;info&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;FILE&quot;</span>/&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;LOGSTASH&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">springProfile</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>然后在 IDEA 的启动选项里指定 dev ，启动应用：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118094236012.png" srcset="/img/loading.gif" alt="image-20210118094236012"></p>
+<p>再访问一下测试请求：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118094448871.png" srcset="/img/loading.gif" alt="image-20210118094448871"></p>
+<h2 id="5-日志查询"><a href="#5-日志查询" class="headerlink" title="5. 日志查询"></a>5. 日志查询</h2><p>我们刷新 Kibana：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118094657559.png" srcset="/img/loading.gif" alt="image-20210118094657559"></p>
+<p>由于我们日志等级是 debug，所以进来了大量日志</p>
+<p>这个时候左侧可以看到 左侧很多字段都是 unknown field，我们的日志内容在 <code>message</code>里，我们需要刷新一下字段：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118095848233.png" srcset="/img/loading.gif" alt="image-20210118095848233"></p>
+<p>再回来刷新就发现字段已经正常了：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118101245092.png" srcset="/img/loading.gif" alt="image-20210118101245092"></p>
+<p>我前面的日志打印了时间戳：<code>1610934226338</code></p>
+<p>我们搜索一下看看，搜索栏输入：<code>message : *1610934226338*</code></p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118101345054.png" srcset="/img/loading.gif" alt="image-20210118101345054"></p>
+<p>可以看到，能正常搜索到日志</p>
+<p>我们展开日志，可以更清晰地看到信息：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118101404856.png" srcset="/img/loading.gif" alt="image-20210118101404856"></p>
+<p>我们还可以按我们想要的格式展现日志：比如 project + ip + message，在左侧上点 + 号添加：</p>
+<p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20210118101750772.png" srcset="/img/loading.gif" alt="image-20210118101750772"></p>
+<p>至此，我们完成了日志的统一存储、查询</p>
+<p>其实我们还可以分场景收集日志，比如分访问日志、应用日志、错误日志，可以用于访问量统计，日志查询，错误监控等</p>
+<p>在 LogStash 的 input 配置多个端口，配置不同的 type，然后根据 type 创建不同的 ES index 即可</p>
+<p>可以根据业务需要去配置，这里就不细展开了</p>
+<p>好了，本篇到此结束，希望对你有帮助！</p>
+<p>源码及脚本都在<a target="_blank" rel="noopener" href="https://github.com/RigerWu/web-starter-demos">Github</a>上</p>
+<p>Enjoy it!</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/spring-boot/">spring boot</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/log/">log</a>
+                    
+                      <a class="hover-with-bg" href="/tags/logstash/">logstash</a>
+                    
+                      <a class="hover-with-bg" href="/tags/elk/">elk</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/13/web-log-logback/">
+                        <span class="hidden-mobile">SpringBoot Logback日志打印详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     Best <i class="iconfont icon-love"></i> for JioJio. 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    <!-- Google Analytics -->
+    <script defer>
+      window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
+      ga.l = +new Date;
+      ga('create', 'G-6VSHZ2S8ZE', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

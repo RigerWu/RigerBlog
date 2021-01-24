@@ -2,29 +2,29 @@
 title: macOS iTerm2 开发环境配置
 date: 2020-12-25 21:09:12
 index_img: https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214140102118.png
-categories: 
-- tools
-tags: 
-- iTerm2
-- macOS
-- zsh
+categories:
+  - tools
+tags:
+  - iTerm2
+  - macOS
+  - zsh
 ---
 
 # macOS iTerm2 开发环境配置
 
 ![image-20201214140102118](https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214140102118.png)
 
-> 注意：本文很多应用的安装都是走的Github，建议在科学上网环境中进行。
+> 注意：本文很多应用的安装都是走的 Github，建议在科学上网环境中进行。
 
 ## 1. iTerm2 安装
 
-放弃使用系统自带Terminl， 在 [iTerm2官网](https://iterm2.com/) 下载安装
+放弃使用系统自带 Terminl， 在 [iTerm2 官网](https://iterm2.com/) 下载安装
 
 <div align="center"><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214135558722.png" alt="image-20201214135558722" style="zoom:50%;" /></div>
 
 安装后打开，按上图，点击`Make iTerm2 Default Term`设置为默认终端
 
-## 2. 安装Homebrew
+## 2. 安装 Homebrew
 
 [`Homebrew`](https://brew.sh/index_zh-cn)自称是`MacOS`或`Linux`缺失的软件包管理器，使用它可以一行命令安装各种开发类工具及应用程序
 
@@ -32,7 +32,7 @@ tags:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
-## 3. 安装zsh
+## 3. 安装 zsh
 
 `MacOS`自带`zsh`，不过版本比较老，我们使用`homebrew`安装最新版，并修改默认`shell`为自己下载的`zsh`
 
@@ -42,9 +42,9 @@ echo "/usr/local/bin/zsh" | sudo tee -a /etc/shells
 chsh -s /usr/local/bin/zsh
 ```
 
-## 4. 安装ohmyzsh
+## 4. 安装 ohmyzsh
 
-运行下面的命名即可安装。 [ohmyzsh官网](https://github.com/ohmyzsh/ohmyzsh)也可以去看看各种插件和主题。
+运行下面的命名即可安装。 [ohmyzsh 官网](https://github.com/ohmyzsh/ohmyzsh)也可以去看看各种插件和主题。
 
 ```shell
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -58,9 +58,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 Github 下载 iTerm2 的 [gruvbox-material](https://github.com/AmmarCodes/gruvbox-material-iterm2) 主题, 双击安装
 
-打开设置, Profiles, Default, Colors, 选择 `grovbox-material`
+打开设置, Profiles, Default, Colors, 右下角的 Clolor Presets 选择 `grovbox-material`
 
-安装Fira字体, 及其对应Nerd版(配合devicons使用)
+安装 Fira 字体, 及其对应 Nerd 版(配合 devicons 使用)
 
 ```shell
 brew tap homebrew/cask-fonts
@@ -70,9 +70,9 @@ brew cask install font-fira-code
 brew cask install font-fira-code-nerd-font
 ```
 
-打开`iTerm2`设置, Profiles, Default, Font,  选择 `Fira Code Nerd`
+打开`iTerm2`设置, Profiles, Default, Text, Font, 选择 `Fira Code Nerd`, 勾选`Use ligatures`
 
-参考ohmyzsh提供的这些 [主题](https://github.com/ohmyzsh/ohmyzsh/wiki/themes)可以选一个自己喜欢的, 推荐agnoster
+参考 ohmyzsh 提供的这些 [主题](https://github.com/ohmyzsh/ohmyzsh/wiki/themes)可以选一个自己喜欢的, 推荐 agnoster
 
 ```shell
 cd ~/Downloads
@@ -102,7 +102,7 @@ git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins
 vi .zshrc
 # 修改如下
 plugins=(
-    git 
+    git
     sublime
     zsh-autosuggestions
     autojump
@@ -124,9 +124,9 @@ glola='git log --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen
 # 命令行输入 alias 即可看到所有的alias
 ```
 
-- `sublime`：`st 文件或路径`  使用`sublime`打开文件或路径；`stt` 打开当前路径
+- `sublime`：`st 文件或路径` 使用`sublime`打开文件或路径；`stt` 打开当前路径
 
-- `zsh-autosuggestions`：命令提示，用过的命令，按方向→自动完成
+- `zsh-autosuggestions`：命令提示，用过的命令，按方向 → 自动完成
 
 ![image-20201227231810507](https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201227231810507.png)
 
@@ -172,4 +172,3 @@ source .zshrc
 ```
 
 Enjoy it !
-

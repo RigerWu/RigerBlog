@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      967 字
+      978 字
     </span>
   
 
@@ -237,31 +237,31 @@
             <div class="markdown-body">
               <h1 id="macOS-iTerm2-开发环境配置"><a href="#macOS-iTerm2-开发环境配置" class="headerlink" title="macOS iTerm2 开发环境配置"></a>macOS iTerm2 开发环境配置</h1><p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214140102118.png" srcset="/img/loading.gif" alt="image-20201214140102118"></p>
 <blockquote>
-<p>注意：本文很多应用的安装都是走的Github，建议在科学上网环境中进行。</p>
+<p>注意：本文很多应用的安装都是走的 Github，建议在科学上网环境中进行。</p>
 </blockquote>
-<h2 id="1-iTerm2-安装"><a href="#1-iTerm2-安装" class="headerlink" title="1. iTerm2 安装"></a>1. iTerm2 安装</h2><p>放弃使用系统自带Terminl， 在 <a target="_blank" rel="noopener" href="https://iterm2.com/">iTerm2官网</a> 下载安装</p>
+<h2 id="1-iTerm2-安装"><a href="#1-iTerm2-安装" class="headerlink" title="1. iTerm2 安装"></a>1. iTerm2 安装</h2><p>放弃使用系统自带 Terminl， 在 <a target="_blank" rel="noopener" href="https://iterm2.com/">iTerm2 官网</a> 下载安装</p>
 <div align="center"><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201214135558722.png" srcset="/img/loading.gif" alt="image-20201214135558722" style="zoom:50%;" /></div>
 
 <p>安装后打开，按上图，点击<code>Make iTerm2 Default Term</code>设置为默认终端</p>
-<h2 id="2-安装Homebrew"><a href="#2-安装Homebrew" class="headerlink" title="2. 安装Homebrew"></a>2. 安装Homebrew</h2><p><a target="_blank" rel="noopener" href="https://brew.sh/index_zh-cn"><code>Homebrew</code></a>自称是<code>MacOS</code>或<code>Linux</code>缺失的软件包管理器，使用它可以一行命令安装各种开发类工具及应用程序</p>
+<h2 id="2-安装-Homebrew"><a href="#2-安装-Homebrew" class="headerlink" title="2. 安装 Homebrew"></a>2. 安装 Homebrew</h2><p><a target="_blank" rel="noopener" href="https://brew.sh/index_zh-cn"><code>Homebrew</code></a>自称是<code>MacOS</code>或<code>Linux</code>缺失的软件包管理器，使用它可以一行命令安装各种开发类工具及应用程序</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)&quot;<br></code></pre></div></td></tr></table></figure>
-<h2 id="3-安装zsh"><a href="#3-安装zsh" class="headerlink" title="3. 安装zsh"></a>3. 安装zsh</h2><p><code>MacOS</code>自带<code>zsh</code>，不过版本比较老，我们使用<code>homebrew</code>安装最新版，并修改默认<code>shell</code>为自己下载的<code>zsh</code></p>
+<h2 id="3-安装-zsh"><a href="#3-安装-zsh" class="headerlink" title="3. 安装 zsh"></a>3. 安装 zsh</h2><p><code>MacOS</code>自带<code>zsh</code>，不过版本比较老，我们使用<code>homebrew</code>安装最新版，并修改默认<code>shell</code>为自己下载的<code>zsh</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew install zsh<br>echo &quot;/usr/local/bin/zsh&quot; | sudo tee -a /etc/shells<br>chsh -s /usr/local/bin/zsh<br></code></pre></div></td></tr></table></figure>
-<h2 id="4-安装ohmyzsh"><a href="#4-安装ohmyzsh" class="headerlink" title="4. 安装ohmyzsh"></a>4. 安装ohmyzsh</h2><p>运行下面的命名即可安装。 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh">ohmyzsh官网</a>也可以去看看各种插件和主题。</p>
+<h2 id="4-安装-ohmyzsh"><a href="#4-安装-ohmyzsh" class="headerlink" title="4. 安装 ohmyzsh"></a>4. 安装 ohmyzsh</h2><p>运行下面的命名即可安装。 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh">ohmyzsh 官网</a>也可以去看看各种插件和主题。</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;<br></code></pre></div></td></tr></table></figure>
 <p><code>zsh</code>的配置文件在：<code>~/.zshrc</code>,后面的配置都在这里面，这里假设你会使用<code>vim</code>，不会可自行使用<code>Sublime</code>等编辑器。</p>
 <h2 id="5-字体主题配置"><a href="#5-字体主题配置" class="headerlink" title="5. 字体主题配置"></a>5. 字体主题配置</h2><p>虽然主题这个东西是一个比较个性化的东西，但是我还是要隆重推荐一下<code>Grovbox</code>主题，我 的<code>IDE</code>、<code>iTerm</code> 和 <code>Vim</code>都用的这个主题:</p>
 <p>Github 下载 iTerm2 的 <a target="_blank" rel="noopener" href="https://github.com/AmmarCodes/gruvbox-material-iterm2">gruvbox-material</a> 主题, 双击安装</p>
-<p>打开设置, Profiles, Default, Colors, 选择 <code>grovbox-material</code></p>
-<p>安装Fira字体, 及其对应Nerd版(配合devicons使用)</p>
+<p>打开设置, Profiles, Default, Colors, 右下角的 Clolor Presets 选择 <code>grovbox-material</code></p>
+<p>安装 Fira 字体, 及其对应 Nerd 版(配合 devicons 使用)</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew tap homebrew/cask-fonts<br>// 这个是给idea, vscode之类用<br>brew cask install font-fira-code<br>// iTerm2 vim 专用<br>brew cask install font-fira-code-nerd-font<br></code></pre></div></td></tr></table></figure>
-<p>打开<code>iTerm2</code>设置, Profiles, Default, Font,  选择 <code>Fira Code Nerd</code></p>
-<p>参考ohmyzsh提供的这些 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh/wiki/themes">主题</a>可以选一个自己喜欢的, 推荐agnoster</p>
+<p>打开<code>iTerm2</code>设置, Profiles, Default, Text, Font, 选择 <code>Fira Code Nerd</code>, 勾选<code>Use ligatures</code></p>
+<p>参考 ohmyzsh 提供的这些 <a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh/wiki/themes">主题</a>可以选一个自己喜欢的, 推荐 agnoster</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd ~/Downloads<br>git clone https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git<br>cd oh-my-zsh-agnoster-fcamblor/<br>./install<br>vi .zshrc<br>ZSH_THEME=&quot;agnoster&quot;<br></code></pre></div></td></tr></table></figure>
 <p>去掉路径中的用户名，设置<code>DEFAULT_USER</code>和你的用户名一直即可:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> .zshrc 里增加：</span><br>DEFAULT_USER=&quot;riger&quot;<br></code></pre></div></td></tr></table></figure>
 <h2 id="6-插件安装及配置"><a href="#6-插件安装及配置" class="headerlink" title="6. 插件安装及配置"></a>6. 插件安装及配置</h2><p>安装一些好用的插件:</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew install autojump<br>git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions<br>git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting<br><br>vi .zshrc<br><span class="hljs-meta">#</span><span class="bash"> 修改如下</span><br>plugins=(<br>    git <br>    sublime<br>    zsh-autosuggestions<br>    autojump<br>    zsh-syntax-highlighting<br>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">brew install autojump<br>git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions<br>git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting<br><br>vi .zshrc<br><span class="hljs-meta">#</span><span class="bash"> 修改如下</span><br>plugins=(<br>    git<br>    sublime<br>    zsh-autosuggestions<br>    autojump<br>    zsh-syntax-highlighting<br>)<br></code></pre></div></td></tr></table></figure>
 <p>简单说明一下我开启的这些插件：</p>
 <ul>
 <li><code>git</code>: 默认就开启的，可以看到文章第一张图，路径上即可显示当前分支是在<code>Master</code>，还有很多方便使用的<code>alias</code></li>
@@ -269,9 +269,9 @@
 <p>我常用的有：</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ga=&#x27;git add&#x27;<br>gst=&#x27;git status&#x27;<br>gcmsg=&#x27;git commit -m&#x27;<br>glola=&#x27;git log --graph --pretty=&#x27;\&#x27;&#x27;%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#x27;\&#x27;&#x27; --all&#x27;<br><span class="hljs-meta">#</span><span class="bash"> 命令行输入 <span class="hljs-built_in">alias</span> 即可看到所有的<span class="hljs-built_in">alias</span></span><br></code></pre></div></td></tr></table></figure>
 <ul>
-<li><p><code>sublime</code>：<code>st 文件或路径</code>  使用<code>sublime</code>打开文件或路径；<code>stt</code> 打开当前路径</p>
+<li><p><code>sublime</code>：<code>st 文件或路径</code> 使用<code>sublime</code>打开文件或路径；<code>stt</code> 打开当前路径</p>
 </li>
-<li><p><code>zsh-autosuggestions</code>：命令提示，用过的命令，按方向→自动完成</p>
+<li><p><code>zsh-autosuggestions</code>：命令提示，用过的命令，按方向 → 自动完成</p>
 </li>
 </ul>
 <p><img src="https://riger.oss-cn-shanghai.aliyuncs.com/img/image-20201227231810507.png" srcset="/img/loading.gif" alt="image-20201227231810507"></p>

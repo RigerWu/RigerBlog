@@ -1,7 +1,7 @@
 ---
 title: SpringBoot中使用RabbitMQ详解
 date: 2021-01-27 23:01:12
-index_img: https://riger.oss-cn-shanghai.aliyuncs.com/img/elk-0931238.png
+index_img: https://riger.oss-cn-shanghai.aliyuncs.com/img/jiojio-rabbit.png
 categories:
   - spring boot
 tags:

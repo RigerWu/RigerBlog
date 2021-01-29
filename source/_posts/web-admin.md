@@ -154,6 +154,9 @@ spring:
         url: http://localhost:8000
         username: riger
         password: riger
+        # 实际部署使用的时候可能获取的应用host不正确,需要手动指定
+        instance:
+          service-base-url: http://localhost:${server.port}
 
 management:
   endpoints:
@@ -166,7 +169,7 @@ management:
 
 logging:
   file:
-    name: client.log # 要配置log文件名,才能在Admin里查看log
+    name: logs/client.log # 要配置log文件名,才能在Admin里查看log
 ```
 
 再启动客户端

@@ -768,7 +768,7 @@ about:
   subtitle: We take everything for granted, aren't we?
   avatar: /img/avatar.png
   name: Riger
-  introduce: "一句简短的介绍"
+  introduce: "后端开发、安卓开发"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, The icon is no longer a link, but a hovering QR code
   icons:
